@@ -1,9 +1,16 @@
-const { catchAsync, userValidators, HttpError } = require('../helpers');
+const { catchAsync, userValidators, HttpError, sendEmail } = require('../helpers');
 const { DiscountRequest } = require('../models');
 
 exports.createUser = catchAsync(async (req, res) => {
   const newUser = await DiscountRequest.create(req.body);
+console.log(newUser.email);
+  const sendData = {
+    to: newUser.email,
+    subject: 'You received discount! Type me "Meow"',
+    html: '<strong>Test mail</strong>'
+  };
 
+  if (newUser) await sendEmail(sendData);
   res.status(201).json({
     msg: 'Success!!',
     user: newUser,
