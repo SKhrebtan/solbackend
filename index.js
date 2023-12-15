@@ -16,7 +16,7 @@ dotenv.config({
 const app = express();
 
 mongoose
-  .connect(process.env.MONGO_URL)
+  .connect('mongodb+srv://shrebtan:GTzJl8liaUhMQFs8@cluster0.7hbsw9g.mongodb.net/')
   .then((con) => {
     console.log('MongoDB is connected!');
   })
