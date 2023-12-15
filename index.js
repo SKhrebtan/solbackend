@@ -2,13 +2,28 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+
 const { userRouter } = require('./routes');
 
 dotenv.config({
-  path: process.env.NODE_ENV === 'production' ? './env/production.env' : './env/development.env'
+  path:
+    process.env.NODE_ENV === 'production'
+      ? './env/production.env'
+      : './env/development.env',
 });
 
 const app = express();
+
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then((con) => {
+    console.log('MongoDB is connected!');
+  })
+  .catch((err) => {
+    console.log(err.message);
+    process.exit(1);
+  });
 
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 app.use(express.json());
@@ -33,15 +48,15 @@ app.use(`${pathPrefix}/users`, userRouter);
 
 app.all('*', (req, res) => {
   res.status(404).json({
-    msg: 'Resource not found!'
+    msg: 'Resource not found!',
   });
 });
 
 app.use((err, req, res, next) => {
   console.log(err);
 
-  res.status(500).json({
-    msg: err.message
+  res.status(err.status ?? 500).json({
+    msg: err.message,
   });
 });
 
