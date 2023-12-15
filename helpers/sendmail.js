@@ -10,7 +10,7 @@ dotenv.config({
 
 const { SENDGRID_PASS } = process.env;
 
-sgMail.setApiKey(SENDGRID_PASS);
+sgMail.setApiKey(SENDGRID_PASS ?? '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');
 
 const sendEmail = async (data) => {
   const email = { ...data, from: 'shrebtan@gmail.com' };
